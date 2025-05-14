@@ -22,25 +22,73 @@ body,
 }
 @keyframes strobe {
   0% {
-    background: rgba(255, 0, 0, 0.8);
+    background: rgba(255, 0, 0, 0.4);
   }
   25% {
-    background: rgba(0, 255, 0, 0.8);
+    background: rgba(0, 255, 0, 0.4);
   }
   50% {
-    background: rgba(0, 0, 255, 0.8);
+    background: rgba(0, 0, 255, 0.4);
   }
   75% {
-    background: rgba(255, 255, 0, 0.8);
+    background: rgba(255, 255, 0, 0.4);
   }
   100% {
-    background: rgba(255, 0, 255, 0.8);
+    background: rgba(255, 0, 255, 0.4);
   }
 }
+
+/* Fullscreen black background and center content */
+.app-outer-bg {
+  width: 100vw;
+  height: 100vh;
+  /* Remove: background: black; */
+  background: linear-gradient(120deg, #00c3ff 0%, #ffff1c 100%);
+  background-size: 200% 200%;
+  animation: bgMove 8s ease-in-out infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+@keyframes bgMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+
+/* The club background image area */
+.nightclub-bg {
+  position: relative;
+  width: 1217px;
+  height: 768px;
+  background-image: url('../public/Night_Club.webp');
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+/* Strobe overlay */
+.strobe-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  animation: strobe 2.5s infinite;
+}
+
+
 .party-sign {
   position: absolute;
-  top: 20px;
-  left: 50%;
+  top: 40px;
+  left: 44%;
   transform: translateX(-50%);
   font-family: "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
   font-size: 64px;
@@ -59,5 +107,40 @@ body,
   }
   100% {
     background-position: 0% 50%;
+  }
+}
+.party-instructions {
+  position: absolute;
+  top: 160px; /* just below the party sign */
+  left: 44.5%;
+  transform: translateX(-50%);
+  font-family: "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  font-size: 10px;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+  background: none;
+  background-image: linear-gradient(90deg, #00ffd0, #fffb00, #00ff94, #00ffd0);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  animation: instructionsGradientShift 4s ease-in-out infinite;
+  z-index: 3;
+  pointer-events: none;
+  user-select: none;
+}
+
+@keyframes instructionsGradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@media (max-width: 800px) {
+  .party-instructions {
+    top: 12vw;
+    font-size: 13px;
   }
 }

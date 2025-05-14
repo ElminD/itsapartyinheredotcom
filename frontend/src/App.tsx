@@ -41,18 +41,26 @@ const App: React.FC = () => {
 
     socket.on("initialUsers", (initial: User[]) => setUsers(initial));
     socket.on("newUser", (u: User) => {
-      setUsers((prev) => [...prev, u]);
+      setUsers((prev) => prev.some(user => user.id === u.id) ? prev : [...prev, u]);
       if (u.id === socket.id) setMe(u);
     });
+
     socket.on(
       "userMoved",
-      ({ id, x, y }: { id: string; x: number; y: number }) => {
-        setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, x, y } : u)));
+      ({ id, x, y, avatarUrl }: { id: string; x: number; y: number; avatarUrl?: string }) => {
+        setUsers((prev) =>
+          prev.map((u) =>
+            u.id === id
+              ? { ...u, x, y, ...(avatarUrl ? { avatarUrl } : {}) }
+              : u
+          )
+        );
         if (id === socket.id && me) {
-          setMe({ ...me, x, y });
+          setMe({ ...me, x, y, ...(avatarUrl ? { avatarUrl } : {}) });
         }
       }
     );
+
     socket.on("userDisconnected", (id: string) => {
       setUsers((prev) => prev.filter((u) => u.id !== id));
     });
@@ -65,13 +73,15 @@ const App: React.FC = () => {
       socket.off("userDisconnected");
     };
   }, [me]);
+  
+  
 
   // Handle movement via arrow keys
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (!me) return;
       let { x, y } = me;
-      const step = 5;
+      const step = 10;
       switch (e.key) {
         case "ArrowUp":
           y -= step;
@@ -85,48 +95,47 @@ const App: React.FC = () => {
         case "ArrowRight":
           x += step;
           break;
+        case "c":
+        case "C":
+          socket.emit("changeAvatar");
+          return;
         default:
           return;
       }
+      // Clamp to bounds (stay fully inside the image)
+      x = Math.max(0, Math.min(1217, x));
+      y = Math.max(0, Math.min(768, y));
       socket.emit("move", { x, y });
       setMe({ ...me, x, y });
     };
+
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, [me]);
 
-  return (
-    <div style={{ margin: 0, padding: 0 }}>
-      <div
-        style={{
-          position: "relative",
-          width: "100vw",
-          height: "100vh",
-          overflow: "hidden",
-          background: "#f0f0f0",
-        }}
-      >
-        {/* Strobe overlay */}
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            pointerEvents: "none",
-            animation: "strobe 2.5s infinite",
-          }}
-        />
 
+  return (
+    <div className="app-outer-bg">
+      <div className="nightclub-bg">
+        {/* Strobe overlay */}
+        <div className="strobe-overlay" />
+  
         {/* Party sign */}
         <h1 className="party-sign">itsapartyinhere</h1>
-
+        <h2 className="party-instructions">arrow keys to move, c to change</h2>
+  
         {/* Avatars */}
         {me &&
           users.map((u) => {
-            const screenX = u.x - me.x + center.x - AVATAR_SIZE / 2;
-            const screenY = u.y - me.y + center.y - AVATAR_SIZE / 2;
+            // Camera logic: clamp center so you can't see outside the image
+            const halfW = 1217 / 2;
+            const halfH = 768 / 2;
+            let camX = me.x;
+            let camY = me.y;
+            camX = Math.max(halfW, Math.min(1217 - halfW, camX));
+            camY = Math.max(halfH, Math.min(768 - halfH, camY));
+            const screenX = u.x - camX + halfW - AVATAR_SIZE / 2;
+            const screenY = u.y - camY + halfH - AVATAR_SIZE / 2;
             return (
               <div
                 key={u.id}
@@ -160,13 +169,13 @@ const App: React.FC = () => {
               </div>
             );
           })}
-
+  
         {/* Playlist audio controls */}
         <audio
           controls
           autoPlay={false}
           loop={true}
-          style={{ position: "absolute", bottom: 10, left: 800 }}
+          style={{ position: "absolute", bottom: 10, left: 400 }}
         >
           <source src="/songs/fred-again-boiler-room.mp3" type="audio/mpeg" />
           Your browser does not support the audio element.
