@@ -31,7 +31,7 @@ const users = new Map<string, User>();
 const buildPath = path.join(__dirname, "build");
 app.use(express.static(buildPath));
 // For any other route, serve index.html
-app.get("/*", (_req, res) => {
+app.use((_req, res) => {
   res.sendFile(path.join(buildPath, "index.html"));
 });
 
