@@ -28,7 +28,7 @@ const users = new Map<string, User>();
 
 // Serve React static build
 // Assumes you copied frontend/build -> backend/build
-const buildPath = path.join(__dirname, "build");
+const buildPath = path.join(__dirname, "..", "build");
 app.use(express.static(buildPath));
 // For any other route, serve index.html
 app.use((req, res, next) => {
