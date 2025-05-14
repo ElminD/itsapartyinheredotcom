@@ -31,10 +31,13 @@ const users = new Map<string, User>();
 const buildPath = path.join(__dirname, "build");
 app.use(express.static(buildPath));
 // For any other route, serve index.html
-app.use((_req, res) => {
-  res.sendFile(path.join(buildPath, "index.html"));
+app.use((req, res, next) => {
+  // only for GETs, and don’t intercept socket.io endpoints
+  if (req.method === "GET" && !req.path.startsWith("/socket.io")) {
+    return res.sendFile(path.join(buildPath, "index.html"));
+  }
+  next();
 });
-
 io.on("connection", (socket: Socket) => {
   // 1) New user joins, send them current state
   socket.emit("initialUsers", Array.from(users.values()));
