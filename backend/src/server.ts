@@ -1,5 +1,6 @@
 import express from "express";
 import http from "http";
+import path from "path";
 import { Server, Socket } from "socket.io";
 
 interface User {
@@ -24,6 +25,15 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 const users = new Map<string, User>();
+
+// Serve React static build
+// Assumes you copied frontend/build -> backend/build
+const buildPath = path.join(__dirname, "build");
+app.use(express.static(buildPath));
+// For any other route, serve index.html
+app.get("*", (_req, res) => {
+  res.sendFile(path.join(buildPath, "index.html"));
+});
 
 io.on("connection", (socket: Socket) => {
   // 1) New user joins, send them current state
