@@ -18,6 +18,19 @@ const AVATARS = [
   "https://emojis.slackmojis.com/emojis/images/1643514670/6723/hyperfastparrot.gif?1643514670",
   "https://emojis.slackmojis.com/emojis/images/1643515386/14043/dino_dance.gif?1643515386",
   "https://emojis.slackmojis.com/emojis/images/1677311855/64344/party-on.gif?1677311855",
+  "https://emojis.slackmojis.com/emojis/images/1643514742/7500/partyparrot.gif?1643514742",
+  "https://emojis.slackmojis.com/emojis/images/1643514812/8270/blob-dance.gif?1643514812",
+  "https://emojis.slackmojis.com/emojis/images/1665051119/61583/vibe-rabbit.gif?1665051119",
+  "https://emojis.slackmojis.com/emojis/images/1643514978/10036/beer_parrot.gif?1643514978",
+  "https://emojis.slackmojis.com/emojis/images/1643517304/33412/jammy.gif?1643517304",
+  "https://emojis.slackmojis.com/emojis/images/1646632043/55382/jammy.gif?1646632043",
+  "https://emojis.slackmojis.com/emojis/images/1646625477/55333/jammy.gif?1646625477",
+  "https://emojis.slackmojis.com/emojis/images/1643517304/33419/jamkip.gif?1643517304",
+  "https://emojis.slackmojis.com/emojis/images/1643514980/10066/exceptionally_fast_parrot.gif?1643514980",
+  "https://emojis.slackmojis.com/emojis/images/1643514139/978/conga_parrot.gif?1643514139",
+  "https://emojis.slackmojis.com/emojis/images/1643514853/8661/fast_meow_party.gif?1643514853",
+  "https://emojis.slackmojis.com/emojis/images/1643515120/11400/among-us-party.gif?1643515120",
+  "https://emojis.slackmojis.com/emojis/images/1694204578/68640/amongustwerkhalloween.gif?1694204578"
 ];
 
 const app = express();
